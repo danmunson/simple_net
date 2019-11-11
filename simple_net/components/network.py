@@ -28,8 +28,8 @@ class Network:
         ]
         self.cost_function = cost_function
         self.cost_gradient = cost_gradient
-        self.learning_rate = learning_rate
         self.gradient_aggregator = gradient_aggregator
+        self._learning_rate = learning_rate
         self._epochs = list()
 
     def feed_forward(self, input_vector):
@@ -60,9 +60,12 @@ class Network:
         """ Updates the paramters of the network after a batch """
         for i in range(1, len(self._layers)+1):
             layer = self._layers[-i]
-            cost_gradient = layer.update_params(cost_gradient)
+            cost_gradient = layer.update_params(
+                cost_gradient,
+                self._learning_rate
+            )
     
-    def run_epoch(features, actuals):
+    def run_epoch(self, features, actuals):
         """ Run a training epoch on a set of training data """
         inputs, resps = deepcopy(features), deepcopy(actuals)
         outputs = self.feed_batch(inputs)

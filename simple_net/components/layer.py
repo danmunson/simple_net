@@ -9,12 +9,12 @@ class Layer:
             of the preceding layer, and M is the dimension of this
             layer. I.e. each row in _weights represents the weights
             for a single node in the layer """
-        self._weights = np.random.rand(
+        self._weights = np.random.randn(
             self_size,
             consume_size
         )
-        self._bias = np.random.rand(self_size)
-        self._activtion = activation
+        self._bias = np.random.randn(self_size)
+        self._activation = activation
         self._activation_derivative = activation_derivative
     
     """
@@ -39,11 +39,6 @@ class Layer:
     """
     Gradient descent utilities
     """
-
-    def adjust(self, weight_adjustment, bias_adjustment):
-        """ Adjust the paramters of the layer """
-        self._weights += weight_adjustment
-        self._bias += bias_adjustment
 
     def compute_gradient(self, current_cost_gradient):
         """ Calculates the gradient with respect to weights and bias """
@@ -117,10 +112,22 @@ class Layer:
             activation_gradient
         )
     
-    def update_params(self, current_cost_gradient):
+    def adjust(self, weight_adjustment, bias_adjustment):
+        """ Adjust the paramters of the layer """
+        self._weights += weight_adjustment
+        self._bias += bias_adjustment
+
+    def update_params(self, current_cost_gradient, learning_rate):
         """ Updates the function paramters and returns the updated 
             current_cost_gradient """
         computations = self.compute_gradient(current_cost_gradient)
         cost_gradient_wrt_input, weight_adj, bias_adj = computations
-        self.adjust(weight_adjs, bias_adj)
+
+        weight_adj *= (-1 * learning_rate)
+        bias_adj *= (-1 * learning_rate)
+
+        print(bias_adj)
+
+        self.adjust(weight_adj, bias_adj)
+
         return cost_gradient_wrt_input
