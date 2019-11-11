@@ -2,7 +2,7 @@
 import numpy as np
 from copy import deepcopy
 
-from simple_net.components import Layer
+from simple_net.components.layer import Layer
 
 class Network:
 
@@ -13,9 +13,10 @@ class Network:
         activation_derivatives,
         cost_function,
         cost_gradient,
+        learning_rate,
         gradient_aggregator
     ):
-    """ Instantiate layers of Neural Network """
+        """ Instantiate layers of Neural Network """
         self._layers = [
             Layer(
                 layer_dims[i], 
@@ -27,22 +28,23 @@ class Network:
         ]
         self.cost_function = cost_function
         self.cost_gradient = cost_gradient
-        self.gradient_aggregator = 
+        self.learning_rate = learning_rate
+        self.gradient_aggregator = gradient_aggregator
         self._epochs = list()
 
     def feed_forward(self, input_vector):
-    """ Feeds input data through the network, returns output """
+        """ Feeds input data through the network, returns output """
         for layer in self._layers:
             input_vector = layer.ff(input_vector)
         return input_vector
 
     def feed_batch(self, inputs):
-    """ Feeds a batch of inputs through the network, collects results """
+        """ Feeds a batch of inputs through the network, collects results """
         return [self.feed_forward(input_vector) for input_vector in inputs]
 
     def compute_cost(self, predictions, actuals):
-    """ Computes cost and gradient of cost function with respect
-        to the output of the network """
+        """ Computes cost and gradient of cost function with respect
+            to the output of the network """
         costs, cost_gradients = zip(*[
             (
                 self.cost_function(prediction, actual),
@@ -55,13 +57,13 @@ class Network:
         return agg_cost_gradient, costs, cost_gradients
 
     def back_prop(self, cost_gradient):
-    """ Updates the paramters of the network after a batch """
+        """ Updates the paramters of the network after a batch """
         for i in range(1, len(self._layers)+1):
             layer = self._layers[-i]
             cost_gradient = layer.update_params(cost_gradient)
     
     def run_epoch(features, actuals):
-    """ Run a training epoch on a set of training data """
+        """ Run a training epoch on a set of training data """
         inputs, resps = deepcopy(features), deepcopy(actuals)
         outputs = self.feed_batch(inputs)
         agg_gradient, costs, gradients = self.compute_cost(outputs, resps)
