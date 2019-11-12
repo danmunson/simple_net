@@ -74,5 +74,6 @@ class Network:
         self._epochs.append({
             'aggregate_gradient' : agg_gradient,
             'cost_values' : costs,
+            'average_cost' : np.mean(costs),
             'gradients' : gradients
         })

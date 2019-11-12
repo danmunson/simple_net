@@ -125,9 +125,6 @@ class Layer:
 
         weight_adj *= (-1 * learning_rate)
         bias_adj *= (-1 * learning_rate)
-
-        print(bias_adj)
-
         self.adjust(weight_adj, bias_adj)
 
         return cost_gradient_wrt_input
