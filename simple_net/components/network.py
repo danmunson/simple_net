@@ -75,5 +75,6 @@ class Network:
             'aggregate_gradient' : agg_gradient,
             'cost_values' : costs,
             'average_cost' : np.mean(costs),
-            'gradients' : gradients
+            'gradients' : gradients,
+            'agg_gradient_magnitude' : np.sum([x**2 for x in agg_gradient])
         })

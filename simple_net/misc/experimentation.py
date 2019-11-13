@@ -4,7 +4,7 @@ Utilities for experimentation
 from numpy.random import choice, randint
 from numpy import prod, sum, array
 
-def generate_polynomial_map(domain_dims, codomain_dims):
+def generate_polynomial_map(domain_dims, codomain_dims, max_terms=3):
     """ Generates a function where each dimension of the codomain
         is a polynomial over the domain dimensions 
         
@@ -16,10 +16,10 @@ def generate_polynomial_map(domain_dims, codomain_dims):
     """ Construct a polynomial for each output dimension """
     for _ in range(codomain_dims):
         """ Determine the number of summands in the polynomial """
-        n_terms = randint(1, min(domain_dims, 5))
+        n_terms = randint(1, max_terms)
         """ Determine which variables to multiply together in each summand """
         terms = [
-            choice(domain_indices, randint(1, min(domain_dims, 5)))
+            choice(domain_indices, randint(1, max_terms))
             for __ in range(n_terms)
         ]
         output_polys.append(terms)
