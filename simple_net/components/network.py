@@ -64,17 +64,19 @@ class Network:
                 cost_gradient,
                 self._learning_rate
             )
+        return cost_gradient
     
     def run_epoch(self, features, actuals):
         """ Run a training epoch on a set of training data """
         inputs, resps = deepcopy(features), deepcopy(actuals)
         outputs = self.feed_batch(inputs)
         agg_gradient, costs, gradients = self.compute_cost(outputs, resps)
-        self.back_prop(agg_gradient)
+        gradient_wrt_input = self.back_prop(agg_gradient)
         self._epochs.append({
-            'aggregate_gradient' : agg_gradient,
-            'cost_values' : costs,
+            'err_gradient' : agg_gradient,
+            'input_gradient' : gradient_wrt_input,
             'average_cost' : np.mean(costs),
-            'gradients' : gradients,
-            'agg_gradient_magnitude' : np.sum([x**2 for x in agg_gradient])
+            'err_gradient_magnitude' : np.sum([x**2 for x in agg_gradient]),
+            'err_gradient_magnitude' : np.sum([x**2 for x in gradient_wrt_input])
         })
+        return outputs

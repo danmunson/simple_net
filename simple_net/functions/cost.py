@@ -15,11 +15,9 @@ def mean_squared_error(arr_actual, arr_pred):
 Gradient
 """
 
-def mse_gradient(arr_actual, arr_pred):
+def mse_gradient(arr_pred, arr_actual):
     """ Gradient of MSE with respect to predictions """
-    return np.array([
-        y0 - y1 for y0, y1 in zip(arr_actual, arr_pred)
-    ])
+    return arr_pred - arr_actual
 
 """
 Gradient Aggregation

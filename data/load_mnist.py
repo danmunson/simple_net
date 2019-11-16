@@ -6,7 +6,7 @@ import numpy as np
 def load_mnist(location, train=True, labels_as_vectors=True):
     features, labels = list(), list()
     with open(location, 'r') as f:
-        header = f.readline()
+        f.readline()
         for line in f.readlines():
             data = line.split(',')
             if train:
