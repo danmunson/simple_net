@@ -45,16 +45,14 @@ class Network:
     def compute_cost(self, predictions, actuals):
         """ Computes cost and gradient of cost function with respect
             to the output of the network """
-        costs, cost_gradients = zip(*[
-            (
-                self.cost_function(prediction, actual),
-                self.cost_gradient(prediction, actual)
-            )
-            for prediction, actual in
-            zip(predictions, actuals)
-        ])
+        average_cost = self.cost_function(predictions, actual)
+        cost_gradients = [
+            self.cost_gradient(prediction, actual)
+            for prediction, actual
+            in zip(predictions, actuals)
+        ]
         agg_cost_gradient = self.gradient_aggregator(cost_gradients)
-        return agg_cost_gradient, costs, cost_gradients
+        return agg_cost_gradient, average_cost
 
     def back_prop(self, cost_gradient):
         """ Updates the paramters of the network after a batch """
@@ -70,13 +68,11 @@ class Network:
         """ Run a training epoch on a set of training data """
         inputs, resps = deepcopy(features), deepcopy(actuals)
         outputs = self.feed_batch(inputs)
-        agg_gradient, costs, gradients = self.compute_cost(outputs, resps)
-        gradient_wrt_input = self.back_prop(agg_gradient)
+        gradient_wrt_output, average_cost = self.compute_cost(outputs, resps)
+        gradient_wrt_input = self.back_prop(gradient_wrt_output)
         self._epochs.append({
-            'err_gradient' : agg_gradient,
+            'output_gradient' : gradient_wrt_output,
             'input_gradient' : gradient_wrt_input,
-            'average_cost' : np.mean(costs),
-            'err_gradient_magnitude' : np.sum([x**2 for x in agg_gradient]),
-            'err_gradient_magnitude' : np.sum([x**2 for x in gradient_wrt_input])
+            'average_cost' : average_cost
         })
         return outputs
